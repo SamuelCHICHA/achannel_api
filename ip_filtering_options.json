@@ -1,0 +1,9 @@
+{
+  "mode":"allow",
+  "denys":[],
+  "allows":["127.0.0.1", "localhost", "::1"],
+  "forceConnectionAddress":false,
+  "statusCode":401,
+  "redirectTo":"",
+  "message":"Unauthorized"
+}

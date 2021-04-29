@@ -1,0 +1,18 @@
+{
+  "name": "desagreable_api",
+  "version": "1.0.0",
+  "description": "API pour récupérer des noms de channel vocal. Utilisé par le bot discord M. Désagréable",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Samuel CHICHA",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-ip-access-control": "^1.0.5",
+    "mariadb": "^2.5.3"
+  }
+}
