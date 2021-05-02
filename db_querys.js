@@ -148,11 +148,39 @@ async function register_guild(guild_id){
     return response;
 }
 
+async function delete_activity(guild_id, activity){
+    let response = {};
+    if (!(typeof guild_id === "number" && typeof activity === "string"))
+        throw new TypeError("Wrong types");
+    await pool.query("DELETE FROM Activities WHERE guild_id=? AND name=?", [guild_id, activity])
+        .then(() => response.status = 0)
+        .catch(dbr => {
+            console.log(dbr);
+            response.status = 0;
+        });
+    return response;
+}
+
+async function delete_guild(guild_id){
+    let response = {};
+    if (!(typeof guild_id === "number"))
+        throw new TypeError("Wrong type");
+    await pool.query("DELETE FROM Guilds WHERE id=?", [guild_id])
+        .then(()=> response.status = 0)
+        .catch(dbr => {
+            console.log(dbr);
+            response.status = 1;
+        });
+    return response;
+}
+
 module.exports = {
     get_activities,
     get_voice_channel_names,
     get_voice_channel_name,
     register_activities,
     register_channel_names,
-    register_guild
+    register_guild,
+    delete_activity,
+    delete_guild
 }

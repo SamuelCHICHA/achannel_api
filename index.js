@@ -83,8 +83,6 @@ app.post('/guild/:guild/register-activity', (req, res) => {
 
 /**
  * Register new channel voice names
- * block of names
- * Untested
  */
 app.post("/guild/:guild/activity/:activity/register-channel-name", (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
@@ -101,6 +99,27 @@ app.post("/guild/:guild/activity/:activity/register-channel-name", (req, res) =>
 app.post("/register-guild", (req, res) => {
    let guild_id = parseInt(req.body["guild_id"]);
     db_handler.register_guild(guild_id)
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
+});
+
+/**
+ * Delete a guild
+ */
+app.post("/delete-guild", (req, res) => {
+    let guild_id = parseInt(req.body["guild_id"]);
+    db_handler.delete_guild(guild_id)
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
+});
+
+/**
+ * Remove an activity from a guild
+ */
+app.post("/guild/:guild/delete-activity", (req, res) => {
+    let guild_id = parseInt(req.params["guild"]);
+    let activity = req.body["activity"];
+    db_handler.delete_activity(guild_id, activity)
         .then(response => res.json(response))
         .catch(response => res.json(response));
 });
