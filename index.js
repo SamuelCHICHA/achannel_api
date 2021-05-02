@@ -35,29 +35,23 @@ const db_handler = require('./db_querys')
 /**
  * Get a random channel name according to an activity in a guild.
  */
-app.get('/guild/:guild/activity/:activity/random', (req, res) => {
+app.get('/guild/:guild/activity/:activity/random-channel-name', (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
     let activity = req.params["activity"];
     db_handler.get_voice_channel_name(guild_id, activity)
-        .then((voice_channel_name) => {
-            res.json(voice_channel_name["channel_name"]);
-        }).catch((err) => {
-        console.log(err);
-    });
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
 });
 
 /**
  * Get list of channel names according to an activity in a guild.
  */
-app.get('/guild/:guild/activity/:activity', (req, res) => {
+app.get('/guild/:guild/activity/:activity/channel-names', (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
     let activity = req.params["activity"];
     db_handler.get_voice_channel_names(guild_id, activity)
-        .then((voice_channel_names) => {
-            res.json(voice_channel_names.map(vc => vc["channel_name"]));
-        }).catch((err) => {
-            console.log(err);
-    });
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
 });
 
 /**
@@ -65,49 +59,50 @@ app.get('/guild/:guild/activity/:activity', (req, res) => {
  */
 app.get('/guild/:guild/activities', (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
-    db_handler.get_activities(guild_id).
-        then((activities) => {
-            res.json(activities.map(a => a["activity_name"]));
-        }).catch((err) => {
-            console.log(err);
-    });
+    db_handler.get_activities(guild_id)
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
 });
 
 /**
- * Register a new activity for the guild
+ * Register new activities for the guild
  */
-app.post('/guild/:guild/activity/:activity', (req, res) => {
-    let response;
+app.post('/guild/:guild/register-activity', (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
-    let activity = req.params["activity"];
-    db_handler.register_activity(guild_id, activity)
-        .then(() => {
-            response = {status: "Success"}
+    let activities = req.body["activities"];
+    db_handler.register_activities(guild_id, activities)
+        .then(response => {
+            console.log(response)
+            res.json(response)
         })
-        .catch((err) => {
-            response = {status: "Failure"}
-        })
-        .finally(() => {
-            res.json(JSON.stringify(response));
+        .catch(response => {
+            console.log(response)
+            res.json(response)
         });
 });
 
 /**
- * Register new channel voice name
- */
-app.post('guild/:guild/activity/:activity/:voice_channel_name', (req, res) => {
-    let guild_id = parseInt(req.params["guild"]);
-    let activity = req.params["activity"];
-    let voice_channel_name = req.params["voice_channel_name"]
-    res.send("Registering new voice channel name " + voice_channel_name + " for " + activity + " in guild " + guild_id + ".")
-});
-
-
-/**
  * Register new channel voice names
  * block of names
+ * Untested
  */
+app.post("/guild/:guild/activity/:activity/register-channel-name", (req, res) => {
+    let guild_id = parseInt(req.params["guild"]);
+    let activity = req.params["activity"];
+    let voice_channel_names = req.body["channel_names"];
+    db_handler.register_channel_names(guild_id, activity, voice_channel_names)
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
+});
 
-
+/**
+ * Register new guild
+ */
+app.post("/register-guild", (req, res) => {
+   let guild_id = parseInt(req.body["guild_id"]);
+    db_handler.register_guild(guild_id)
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
+});
 
 app.listen(port)
