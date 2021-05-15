@@ -148,16 +148,23 @@ async function register_guild(guild_id){
     return response;
 }
 
-async function delete_activity(guild_id, activity){
+async function delete_activities(guild_id, activities){
     let response = {};
-    if (!(typeof guild_id === "number" && typeof activity === "string"))
+    let data = []
+    let i;
+    if (!(typeof guild_id === "number" && typeof Array.isArray(activities)))
         throw new TypeError("Wrong types");
-    await pool.query("DELETE FROM Activities WHERE guild_id=? AND name=?", [guild_id, activity])
+    for(i = 0; i < activities.length; i++)
+        data.push([guild_id, activities[i]]);
+    console.log("Let's go!")
+    console.log(activities)
+    await pool.batch("DELETE FROM Activities WHERE guild_id=? AND name=?", data)
         .then(() => response.status = 0)
         .catch(dbr => {
             console.log(dbr);
             response.status = 0;
         });
+    console.log(response)
     return response;
 }
 
@@ -181,6 +188,6 @@ module.exports = {
     register_activities,
     register_channel_names,
     register_guild,
-    delete_activity,
+    delete_activities,
     delete_guild
 }

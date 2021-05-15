@@ -116,10 +116,10 @@ app.post("/delete-guild", (req, res) => {
 /**
  * Remove an activity from a guild
  */
-app.post("/guild/:guild/delete-activity", (req, res) => {
+app.post("/guild/:guild/delete-activities", (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
-    let activity = req.body["activity"];
-    db_handler.delete_activity(guild_id, activity)
+    let activity = req.body["activities"];
+    db_handler.delete_activities(guild_id, activity)
         .then(response => res.json(response))
         .catch(response => res.json(response));
 });
