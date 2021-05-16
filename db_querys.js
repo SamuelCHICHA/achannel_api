@@ -95,7 +95,7 @@ async function register_activities(guild_id, activities) {
         throw new TypeError("Wrong types");
     for(i = 0; i < activities.length; i++)
         data.push([activities[i], guild_id]);
-    await pool.batch("INSERT INTO Activities(name, guild_id) VALUES(?, ?)", data)
+    await pool.batch("INSERT IGNORE INTO Activities(name, guild_id) VALUES(?, ?)", data)
         .then(() => {
             response.status = 0
             console.log()
@@ -117,7 +117,7 @@ async function register_channel_names(guild_id, activity, channel_names){
         throw new TypeError("Wrong types");
     for(i = 0; i < channel_names.length; i++)
         data.push([channel_names[i], activity, guild_id]);
-    sql_query = "INSERT INTO Channels(name, activity_id) VALUES (?, (SELECT id FROM Activities WHERE name=? AND guild_id=?))"
+    sql_query = "INSERT IGNORE INTO Channels(name, activity_id) VALUES (?, (SELECT id FROM Activities WHERE name=? AND guild_id=?))"
     await pool.batch(sql_query, data)
         .then(() => response.status = 0)
         .catch(dbr => {
