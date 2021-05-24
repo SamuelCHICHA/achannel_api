@@ -16,7 +16,8 @@ const ip_filtering_config = JSON.parse(String(ip_filtering_config_file))
 
 
 app.use((req, res, next) => {
-    console.log(req.url );
+    console.log(`url: ${req.url}, params: ${req.params}`);
+    next();
 });
 
 /**
@@ -75,14 +76,8 @@ app.post('/guild/:guild/register-activity', (req, res) => {
     let guild_id = parseInt(req.params["guild"]);
     let activities = req.body["activities"];
     db_handler.register_activities(guild_id, activities)
-        .then(response => {
-            console.log(response)
-            res.json(response)
-        })
-        .catch(response => {
-            console.log(response)
-            res.json(response)
-        });
+        .then(response => res.json(response))
+        .catch(response => res.json(response));
 });
 
 /**

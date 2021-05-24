@@ -135,8 +135,10 @@ async function register_guild(guild_id){
         .then(dbr => {
             if(dbr["affectedRows"] === 1)
                 response.status = 0;
-            else
+            else {
                 console.warn(dbr);
+                response.status = 4;
+            }
         })
         .catch(err => {
             console.error(err);
