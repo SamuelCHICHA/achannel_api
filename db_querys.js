@@ -35,10 +35,10 @@ async function get_activities (guild_id){
                 response.content = response.content.map(a => a["name"]);
             }
         })
-        .catch((err) => {
+        .catch(err => {
             response.status = 1;
             response.content = "Database Error";
-            console.log(`Error when trying to query DB: ${err}`);
+            console.error(err);
         });
     return response;
 }
@@ -60,7 +60,7 @@ async function get_voice_channel_names(guild_id, activity){
         .catch(err => {
             response.status = 1;
             response.content = "Database Error";
-            console.log(err);
+            console.error(err);
         });
     return response;
 }
@@ -82,7 +82,7 @@ async function get_voice_channel_name(guild_id, activity){
         .catch(err => {
             response.status = 1;
             response.content = "Database Error"
-            console.log(err);
+            console.error(err);
         });
     return response;
 }
@@ -97,11 +97,10 @@ async function register_activities(guild_id, activities) {
         data.push([activities[i], guild_id]);
     await pool.batch("INSERT IGNORE INTO Activities(name, guild_id) VALUES(?, ?)", data)
         .then(() => {
-            response.status = 0
-            console.log()
+            response.status = 0;
         })
-        .catch(dbr => {
-            console.log(dbr);
+        .catch(err => {
+            console.error(err);
             response.status = 1;
         });
     return response;
@@ -120,8 +119,8 @@ async function register_channel_names(guild_id, activity, channel_names){
     sql_query = "INSERT IGNORE INTO Channels(name, activity_id) VALUES (?, (SELECT id FROM Activities WHERE name=? AND guild_id=?))"
     await pool.batch(sql_query, data)
         .then(() => response.status = 0)
-        .catch(dbr => {
-            console.log(dbr);
+        .catch(err => {
+            console.error(err);
             response.status = 1;
         });
     return response;
@@ -136,13 +135,11 @@ async function register_guild(guild_id){
         .then(dbr => {
             if(dbr["affectedRows"] === 1)
                 response.status = 0;
-            else if(dbr["affectedRows"] === 0)
-                response.status = 2;
             else
-                response.status = 4;
+                console.warn(dbr);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
             response.status = 1;
         });
     return response;
@@ -156,15 +153,12 @@ async function delete_activities(guild_id, activities){
         throw new TypeError("Wrong types");
     for(i = 0; i < activities.length; i++)
         data.push([guild_id, activities[i]]);
-    console.log("Let's go!")
-    console.log(activities)
     await pool.batch("DELETE FROM Activities WHERE guild_id=? AND name=?", data)
         .then(() => response.status = 0)
-        .catch(dbr => {
-            console.log(dbr);
-            response.status = 0;
+        .catch(err => {
+            console.error(err);
+            response.status = 1;
         });
-    console.log(response)
     return response;
 }
 
@@ -174,8 +168,8 @@ async function delete_guild(guild_id){
         throw new TypeError("Wrong type");
     await pool.query("DELETE FROM Guilds WHERE id=?", [guild_id])
         .then(()=> response.status = 0)
-        .catch(dbr => {
-            console.log(dbr);
+        .catch(err => {
+            console.error(err);
             response.status = 1;
         });
     return response;

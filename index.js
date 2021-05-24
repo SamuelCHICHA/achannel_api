@@ -15,6 +15,10 @@ const ip_filtering_config_file = fs.readFileSync("ip_filtering_options.json")
 const ip_filtering_config = JSON.parse(String(ip_filtering_config_file))
 
 
+app.use((req, res, next) => {
+    console.log(req.url );
+});
+
 /**
  * Middleware: checks that the ip address matches one of the authorized ones
  * https://github.com/tychovbh/expressjs-ip-control#readme
