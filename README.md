@@ -5,6 +5,10 @@
 This API is meant to add a layer between the database and the [AChannel](https://github.com/SamuelCHICHA/achannel) bot.
 It can only be used with local queries.
 
+## Installation
+
+Clone the project and run `npm install` then run `npm start` to launch the app. 
+
 ## Routes
 
 - /guild/{guild_id}/activity/{activity_name}/random-channel-name [**GET**]
