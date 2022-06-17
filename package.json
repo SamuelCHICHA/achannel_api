@@ -4,6 +4,8 @@
   "description": "API pour récupérer des noms de channel vocal. Utilisé par le bot discord M. Désagréable",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Samuel CHICHA",
